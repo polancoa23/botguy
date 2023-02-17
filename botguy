@@ -3,7 +3,7 @@
 int closedOrange = 430;
 int closedGreen = 430;
 int opened=1300;
-int speed=30;
+int speed=45;
 int lilSpeed=15;
 int max = 485;
 int orangeVert = 1320;
@@ -16,10 +16,13 @@ int claw = 1;
 int clawSideSens = 0;
 int clawFrontSens = 0;
 int frontSens = 5;
-int line = 2500;
+int pole = 2500;
 int gWall = 500;
 int lineL = 3800;
 int sideLight = 5;
+int tooClose = #;
+int tooFar = #;
+int midLight = #;
 //FUNCTIONS
 void claw_down_orange();
 void claw_down_green();
@@ -38,6 +41,8 @@ void place();
 void forward();
 void pivot_left_turn();
 void pivot_right_turn();
+void adjustL();
+void adjustR();
 
 int main(){
 	//wait for light();
@@ -47,56 +52,52 @@ int main(){
     open_claw();
 	claw_up_max();
     //BOTGUY TIME!
+    //1) bring claw down and grab it
     claw_down_green();
     close_claw_green();
+    //2)make a right turn and move forward until shelter. adjust if it gets too close/far from wall
     right_turn();
-    msleep(3000);
+    msleep(2000);
     ao();
     msleep(1000);
-    while(digital(clawFrontSens) == 0){
+    while(analog(clawFrontSens) > gWall){
         forward();
+	if(analog(side) > tooClose){
+		adjustL();
+		ao();
+		msleep(500);
+	}
+	if(analog(side) < tooFar){
+		adjustR();
+		ao();
+		msleep(500);	
+	}
     }
     ao();
     msleep(1000);
+    //3) place botguy in the shelter
     open_claw();
-    msleep(1000);
-    forward();
-    msleep(500);
-    ao();
     msleep(1000);
     claw_up_max();
     msleep(1000);
+    //4) back up and make a left turn
     back();
     msleep(2000);
-    //left
-    pivot_left_turn();
-    msleep(3000);
-    ao();
-    msleep(500);
-    //right
-    pivot_right_turn();
-    msleep(3000);
-    ao();
-    msleep(500);
-    //left normal
     left_turn();
     msleep(2000);
     ao();
     msleep(500);
-    //forward while left doesnt see < lineL
-    while(analog(sideLight) < lineL){
+    //5)forward till black line
+    while(analog(midLight) < lineL){
     	forward();
     }
     ao();
     msleep(1000);
     //norm left turn
     left_turn();
-    msleep(1600);
+    msleep(2000);
     ao();
     msleep(500);
-    //pivot left turn
-    //pivot_left_turn();
-    //msleep(1000);
     //forward while bla bla bla
     while(analog(sideLight) < lineL){
     	forward();
@@ -104,13 +105,16 @@ int main(){
     ao();
     msleep(1000);
     //right
-    pivot_right_turn();
-    msleep(3000);
+    right_turn();
+    msleep(2000);
     //forward for like a second
     forward();
-    msleep(1000);
-    ao(1000);
+    msleep(750);
+    ao();
+    msleep(1000)
     //grab
+    claw_down_green();
+    msleep(1000);
     close_claw_green();
     msleep(1000);
     // move back 1 second
@@ -118,6 +122,7 @@ int main(){
     msleep(1000);
     ao();
     msleep(1000);
+    claw_up_max();
     // 
     disable_servos();
     ao();
@@ -265,4 +270,24 @@ void place(){
     		printf("down a bit\n");
     		i++;
   	}
+}
+void adjustL(){
+	int i = 0;
+	while(i<10){
+		pivot_left_turn();
+		msleep(350);
+		pivot_right_turn();
+		msleep(300);
+		i++;
+	}
+}
+void adjustR(){
+	int i = 0;
+	while(i<10){
+		pivot_right_turn();
+		msleep(350);
+		pivot_left_turn();
+		msleep(300);
+		i++;
+	}
 }
