@@ -31,7 +31,6 @@ int turnPause = 1300;
 int cornerPause = #;
 int stackPause = #;
 int hydro = #;
-int stack = #;
 //FUNCTIONS
 void claw_down_orange();
 void claw_down_green();
