@@ -56,6 +56,7 @@ void adjustL();
 void adjustR();
 void grab_and_up();
 void drop();
+void down_and_open();
 void knock_down();
 void super_grab();
 void on_ground();
@@ -141,13 +142,15 @@ int main(){
     left_turn();
     msleep(turnPause);
     wait();
+    down_and_open();
     forward();
     msleep(#);//time to get to stack
     wait();
     printf("arrived at stack. time to grab it and bring it to the base\n");
 
     //STEP 10
-    superGrab();
+    close_claw_blue();
+    msleep(500);
     msleep(1000);
     back();
     msleep(1000);
@@ -162,13 +165,22 @@ int main(){
     wait();
     on_ground();
     msleep(1000);
-    printf("put the rings in base. we're done!");
+    printf("put the rings in base.\n");
+    
+    //STEP 12
+    back();
+    msleep(3000);
+    wait();
+    close_claw_green();
+    claw_down_green();
+    forward();
+    msleep(2000);
+    printf("all rings on the ground. we're done!");
     
     disable_servos();
     ao();
 	return 0;
 }
-
 
 void claw_down_orange(){
 	int i = get_servo_position(0); // get vert pos
@@ -353,6 +365,12 @@ void knock_down(){
    wait();
    claw_up_max();
    msleep(1000);
+}
+void down_and_open(){
+   claw_down_blue();
+   msleep(500);
+   open_claw();
+   msleep(500);
 }
 void super_grab(){
    open_claw();
