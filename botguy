@@ -137,14 +137,14 @@ int main(){
 
     //STEP 9
     forward();
-    msleep(#);//time to get to left corner
+    msleep(cornerPause);//time to get to left corner
     wait();
     left_turn();
     msleep(turnPause);
     wait();
     down_and_open();
     forward();
-    msleep(#);//time to get to stack
+    msleep(stackPause);//time to get to stack
     wait();
     printf("arrived at stack. time to grab it and bring it to the base\n");
 
